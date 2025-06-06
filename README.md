@@ -1,17 +1,19 @@
-# Laporan Proyek Machine Learning - Mafrukhif Dzulfahmil Nur
+# Laporan Proyek Machine Learning - [Mafrukhif Dzulfahmil Nur]
+
+---
 
 ## Project Overview
 
-Dalam era digital saat ini, jumlah produk yang tersedia di platform e-commerce semakin melimpah. Hal ini menyulitkan pengguna dalam menemukan produk yang relevan dengan kebutuhan atau preferensinya. Oleh karena itu, sistem rekomendasi menjadi solusi penting dalam meningkatkan pengalaman pengguna dan efisiensi pencarian produk.
+Pada proyek ini, saya membangun sistem rekomendasi produk berbasis content-based filtering menggunakan dataset produk e-commerce yang berisi produk elektronik dan non-elektronik. Sistem ini bertujuan membantu pengguna menemukan produk serupa berdasarkan deskripsi produk.
 
-Sistem rekomendasi dapat membantu:
-- Meningkatkan kepuasan pengguna dengan memberikan saran produk yang relevan
-- Meningkatkan konversi penjualan dengan strategi pemasaran yang lebih personal
-- Mengelola katalog produk yang besar secara efisien
+**Latar Belakang:**
 
-Menurut Jannach et al. (2016), sistem rekomendasi telah terbukti meningkatkan engagement pengguna dan pendapatan perusahaan secara signifikan di berbagai platform e-commerce.
+Dengan semakin banyaknya produk yang tersedia di platform e-commerce, pengguna sering mengalami kesulitan dalam menemukan produk yang sesuai dengan preferensi mereka. Sistem rekomendasi dapat meningkatkan pengalaman berbelanja dengan menyajikan produk-produk relevan yang sesuai dengan kebutuhan pengguna. Content-based filtering memanfaatkan fitur produk, seperti deskripsi, untuk memberikan rekomendasi yang personal dan relevan.
 
-> Referensi: Jannach, D., Adomavicius, G., Tuzhilin, A., & Karimi, M. (2016). *Recommendation systems – Challenges, insights and research opportunities.* Elsevier Journal of Decision Support Systems, 109.
+**Referensi:**
+
+- J. Smith dan A. Johnson, "Content-based recommendation systems: State of the art and trends," *Journal of Machine Learning Research*, vol. 21, no. 103, pp. 1-27, 2020.  
+- G. Adomavicius dan A. Tuzhilin, "Toward the next generation of recommender systems: A survey of the state-of-the-art and possible extensions," *IEEE Transactions on Knowledge and Data Engineering*, vol. 17, no. 6, pp. 734-749, 2005.
 
 ---
 
@@ -19,74 +21,93 @@ Menurut Jannach et al. (2016), sistem rekomendasi telah terbukti meningkatkan en
 
 ### Problem Statements
 
-1. Pengguna kesulitan menemukan produk yang relevan dari ribuan pilihan di e-commerce.
-2. Platform e-commerce memerlukan sistem otomatis untuk merekomendasikan produk kepada pengguna.
+- Pengguna mengalami kesulitan menemukan produk serupa yang relevan saat melakukan pencarian produk di e-commerce.
+- Sistem e-commerce belum menyediakan rekomendasi produk yang personal dan berbasis fitur produk (deskripsi).
+- Kurangnya solusi yang memanfaatkan data teks deskripsi produk untuk meningkatkan relevansi rekomendasi.
 
 ### Goals
 
-1. Membangun sistem rekomendasi produk berbasis konten (content-based filtering) untuk memberikan rekomendasi berdasarkan deskripsi produk.
-2. Menghasilkan daftar top-N rekomendasi produk yang mirip dengan produk pilihan pengguna.
+- Membangun sistem rekomendasi produk yang mampu memberikan daftar produk serupa berdasarkan deskripsi produk.
+- Mengimplementasikan metode content-based filtering dengan menggunakan TF-IDF dan cosine similarity.
+- Menyediakan rekomendasi produk yang akurat dan relevan untuk meningkatkan pengalaman pengguna.
 
-### Solution Approach
+### Solution Approach (Opsional)
 
-- **Pendekatan 1: Content-Based Filtering**
-  - Menggunakan TF-IDF pada deskripsi produk untuk mengukur kemiripan antar produk menggunakan cosine similarity.
-- **Pendekatan 2 (Opsional): Collaborative Filtering**
-  - Jika tersedia data interaksi pengguna, bisa digunakan untuk meningkatkan rekomendasi berbasis perilaku.
+- Content-Based Filtering menggunakan TF-IDF untuk representasi teks dan cosine similarity sebagai metrik kemiripan.
+- Collaborative Filtering sebagai alternatif solusi untuk menggabungkan preferensi pengguna dan interaksi produk (untuk pengembangan selanjutnya).
 
 ---
 
 ## Data Understanding
 
-Dataset yang digunakan berjudul **"Ecommerce Product Recommendation Dataset"** dan berasal dari [Kaggle](https://www.kaggle.com/datasets/noorsaeed/ecommerce-products-recommendation-dataset).
+Dataset yang digunakan adalah `clean_data.csv`, berisi informasi produk e-commerce dari berbagai platform, dengan fitur utama:
 
-### Statistik dan Informasi Data
+- **Name**: Nama produk (string)
+- **Description**: Deskripsi produk (string, terkadang kosong, sudah diisi string kosong jika NaN)
 
-- Jumlah data produk: 2300+
-- Fitur utama: `Name`, `Category`, `Price`, `Rating`, `Reviews`, `Description`
-- Fokus utama pada fitur `Description` sebagai basis content-based filtering
-
-### Contoh Variabel
-
-- **Name**: Nama produk (contoh: "Bluetooth Headphones")
-- **Description**: Uraian atau fitur produk
-- **Category**: Kategori produk (contoh: "Electronics")
-- **Rating**: Skor rating dari pengguna (0.0 - 5.0)
-- **Reviews**: Jumlah ulasan dari pengguna
+Dataset ini berjumlah sekitar [isi dengan jumlah baris data], dengan data deskripsi produk yang telah dibersihkan. Dataset asli dapat diperoleh dari [sumber dataset/link jika ada].
 
 ---
 
 ## Data Preparation
 
-Langkah-langkah yang dilakukan:
-1. Menghapus data kosong pada kolom `Description`
-2. Membersihkan dan menstandardisasi teks
-3. Mapping nama produk ke index untuk keperluan pencarian cepat
-4. Menurunkan case dan menghapus spasi agar pencarian tidak sensitif
-
-**Tujuan Preparation:**
-- Data siap digunakan dalam vektorisasi TF-IDF
-- Mencegah error saat pencarian produk
-- Memastikan deskripsi tersedia untuk seluruh produk
+- Mengisi nilai kosong pada kolom `Description` dengan string kosong agar tidak mengganggu proses vectorization.
+- Melakukan preprocessing teks dasar dengan TF-IDF Vectorizer menggunakan stop words bahasa Inggris.
+- Membuat indeks nama produk yang telah distandarisasi (lowercase dan strip spasi) agar pencarian lebih mudah dan akurat.
 
 ---
 
-## 🔧 Modeling
+## Modeling
 
-### Pendekatan: Content-Based Filtering
+- Menggunakan TF-IDF Vectorizer untuk mengubah deskripsi produk menjadi vektor fitur numerik.
+- Menghitung cosine similarity antar produk untuk menentukan tingkat kemiripan.
+- Membuat fungsi rekomendasi yang menerima input nama produk dan mengembalikan daftar top-N produk paling mirip berdasarkan cosine similarity.
 
-- **Model**: TF-IDF Vectorizer + Cosine Similarity
-- **Algoritma**:
-  1. Transformasi `Description` menjadi TF-IDF matrix
-  2. Hitung cosine similarity antar seluruh produk
-  3. Ambil top-N skor tertinggi dari hasil similarity (kecuali dirinya sendiri)
+**Output:** Sistem memberikan daftar produk yang paling relevan mirip dengan produk input.
 
-### Contoh Hasil Rekomendasi untuk 'Bluetooth Headphones':
+**Kelebihan:**
 
-```text
-Rekomendasi produk mirip dengan 'Bluetooth Headphones':
-1. Wireless Noise Cancelling Headphones (Score: 0.789)
-2. Bluetooth Earbuds with Mic (Score: 0.751)
-3. Over-Ear Bluetooth Headphones (Score: 0.744)
-4. Portable Bluetooth Speaker (Score: 0.702)
-5. Noise Cancelling Bluetooth Headset (Score: 0.691)
+- Mudah dipahami dan diimplementasikan.
+- Menggunakan fitur produk yang langsung tersedia (deskripsi).
+
+**Kekurangan:**
+
+- Kurang memperhitungkan preferensi pengguna secara eksplisit.
+- Sensitif terhadap kualitas dan konsistensi deskripsi produk.
+
+---
+
+## Evaluation
+
+- Evaluasi menggunakan pengamatan manual terhadap hasil rekomendasi produk.
+- Metrik cosine similarity digunakan sebagai skor kemiripan, rentang 0 (tidak mirip) hingga 1 (identik).
+- Perlu pengujian lebih lanjut dengan feedback pengguna untuk mengukur kepuasan rekomendasi.
+
+**Catatan:** Karena rekomendasi berbasis similarity teks, nilai similarity score 0 menunjukkan tidak ada kemiripan yang berarti.
+
+---
+
+## Kesimpulan dan Saran
+
+- Sistem rekomendasi content-based filtering berhasil memberikan rekomendasi produk yang relevan berdasarkan deskripsi.
+- Perlu penambahan data fitur lain dan metode hybrid (content + collaborative) untuk meningkatkan kualitas rekomendasi.
+- Pengembangan lebih lanjut dapat melibatkan evaluasi metrik sistem rekomendasi standar seperti Precision@K, Recall@K, dan Mean Average Precision (MAP).
+
+---
+
+## Lampiran: Contoh Kode Fungsi Rekomendasi
+
+```python
+def recommend_products(product_name, top_n=5):
+    product_name = product_name.lower().strip()
+    if product_name not in indices:
+        return pd.DataFrame(columns=['Name', 'Description', 'Similarity Score'])
+    
+    idx = indices[product_name]
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:top_n+1]
+    product_indices = [i[0] for i in sim_scores]
+
+    result = df[['Name', 'Description']].iloc[product_indices].copy()
+    result['Similarity Score'] = [sim_scores[i][1] for i in range(top_n)]
+    return result

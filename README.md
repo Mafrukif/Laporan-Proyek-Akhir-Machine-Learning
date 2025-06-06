@@ -45,7 +45,7 @@ Dataset yang digunakan adalah `clean_data.csv`, berisi informasi produk e-commer
 - **Name**: Nama produk (string)
 - **Description**: Deskripsi produk (string, terkadang kosong, sudah diisi string kosong jika NaN)
 
-Dataset ini berjumlah sekitar [isi dengan jumlah baris data], dengan data deskripsi produk yang telah dibersihkan. Dataset asli dapat diperoleh dari [sumber dataset/link jika ada].
+Dataset ini berjumlah sekitar 4090, dengan data deskripsi produk yang telah dibersihkan. Dataset asli dapat diperoleh dari [https://www.kaggle.com/datasets/noorsaeed/ecommerce-products-recommendation-dataset].
 
 ---
 

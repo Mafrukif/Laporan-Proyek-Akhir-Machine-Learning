@@ -59,9 +59,9 @@ Dataset ini berjumlah sekitar 4090, dengan data deskripsi produk yang telah dibe
 
 ## Modeling
 
-- Menggunakan TF-IDF Vectorizer untuk mengubah deskripsi produk menjadi vektor fitur numerik.
-- Menghitung cosine similarity antar produk untuk menentukan tingkat kemiripan.
-- Membuat fungsi rekomendasi yang menerima input nama produk dan mengembalikan daftar top-N produk paling mirip berdasarkan cosine similarity.
+- Mengisi nilai kosong pada kolom `Description` dengan string kosong agar tidak mengganggu proses vektorisasi.
+- Melakukan preprocessing teks dengan TF-IDF Vectorizer menggunakan stop words bahasa Inggris.
+- Membuat indeks nama produk yang telah distandarisasi (lowercase dan strip spasi) untuk pencarian yang lebih mudah dan akurat.
 
 **Output:** Sistem memberikan daftar produk yang paling relevan mirip dengan produk input.
 
@@ -79,9 +79,12 @@ Dataset ini berjumlah sekitar 4090, dengan data deskripsi produk yang telah dibe
 
 ## Evaluation
 
-- Evaluasi menggunakan pengamatan manual terhadap hasil rekomendasi produk.
-- Metrik cosine similarity digunakan sebagai skor kemiripan, rentang 0 (tidak mirip) hingga 1 (identik).
-- Perlu pengujian lebih lanjut dengan feedback pengguna untuk mengukur kepuasan rekomendasi.
+- Sistem diuji dengan memasukkan nama produk dan mencari produk paling mirip dalam dataset.
+- Jika produk tidak ditemukan, sistem menampilkan pesan produk tidak ada.
+- Jika produk ditemukan, sistem mengembalikan daftar produk serupa dengan skor kemiripan.
+- Contoh uji:
+  - Input `'Wireless Mouse'`: produk tidak ditemukan dalam dataset.
+  - Input `'OPI Infinite Shine, Nail Lacquer Nail Polish'`: produk ditemukan dan sistem memberikan rekomendasi 5 produk serupa, walaupun skor kemiripan rendah.
 
 **Catatan:** Karena rekomendasi berbasis similarity teks, nilai similarity score 0 menunjukkan tidak ada kemiripan yang berarti.
 

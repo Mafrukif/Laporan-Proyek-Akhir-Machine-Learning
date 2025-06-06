@@ -1,6 +1,6 @@
-# 🧠 Laporan Proyek Machine Learning - Mafrukhif Dzulfahmil Nur
+# Laporan Proyek Machine Learning - Mafrukhif Dzulfahmil Nur
 
-## 📌 Project Overview
+## Project Overview
 
 Dalam era digital saat ini, jumlah produk yang tersedia di platform e-commerce semakin melimpah. Hal ini menyulitkan pengguna dalam menemukan produk yang relevan dengan kebutuhan atau preferensinya. Oleh karena itu, sistem rekomendasi menjadi solusi penting dalam meningkatkan pengalaman pengguna dan efisiensi pencarian produk.
 
@@ -15,7 +15,7 @@ Menurut Jannach et al. (2016), sistem rekomendasi telah terbukti meningkatkan en
 
 ---
 
-## 🧠 Business Understanding
+## Business Understanding
 
 ### Problem Statements
 
@@ -36,7 +36,7 @@ Menurut Jannach et al. (2016), sistem rekomendasi telah terbukti meningkatkan en
 
 ---
 
-## 📊 Data Understanding
+## Data Understanding
 
 Dataset yang digunakan berjudul **"Ecommerce Product Recommendation Dataset"** dan berasal dari [Kaggle](https://www.kaggle.com/datasets/noorsaeed/ecommerce-products-recommendation-dataset).
 
@@ -56,7 +56,7 @@ Dataset yang digunakan berjudul **"Ecommerce Product Recommendation Dataset"** d
 
 ---
 
-## 🧹 Data Preparation
+## Data Preparation
 
 Langkah-langkah yang dilakukan:
 1. Menghapus data kosong pada kolom `Description`

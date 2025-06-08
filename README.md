@@ -42,28 +42,54 @@ Dengan semakin banyaknya produk yang tersedia di platform e-commerce, pengguna s
 
 Dataset yang digunakan adalah `clean_data.csv`, berisi informasi produk e-commerce dari berbagai platform, dengan fitur utama:
 
-- **Name**: Nama produk (string)
-- **Description**: Deskripsi produk (string, terkadang kosong, sudah diisi string kosong jika NaN)
+1. **Unnamed: 0** – Indeks baris otomatis (dihasilkan saat export CSV).
+2. **ID** – ID unik untuk setiap entri data.
+3. **ProdID** – ID unik produk.
+4. **Rating** – Rating pengguna terhadap produk.
+5. **ReviewCount** – Jumlah ulasan yang diberikan untuk produk.
+6. **Category** – Kategori produk (misalnya: Beauty, Electronics, dll.).
+7. **Brand** – Merek produk.
+8. **Name** – Nama produk.
+9. **ImageURL** – URL gambar produk.
+10. **Description** – Deskripsi produk (string teks, beberapa awalnya kosong).
+11. **Tags** – Tag/kata kunci yang terkait dengan produk.
 
-Dataset ini berjumlah sekitar 4090, dengan data deskripsi produk yang telah dibersihkan. Dataset asli dapat diperoleh dari [https://www.kaggle.com/datasets/noorsaeed/ecommerce-products-recommendation-dataset].
+Dataset ini berjumlah baris sekitar 4090 dan jumlah kolom sebanyak 11, dengan data deskripsi produk yang telah dibersihkan. Dataset asli dapat diperoleh dari [https://www.kaggle.com/datasets/noorsaeed/ecommerce-products-recommendation-dataset].
 
 ---
 
 ## Data Preparation
 
-- Mengisi nilai kosong pada kolom `Description` dengan string kosong agar tidak mengganggu proses vectorization.
-- Melakukan preprocessing teks dasar dengan TF-IDF Vectorizer menggunakan stop words bahasa Inggris.
-- Membuat indeks nama produk yang telah distandarisasi (lowercase dan strip spasi) agar pencarian lebih mudah dan akurat.
+- Nilai kosong pada kolom `Description` diisi dengan string kosong (`''`) agar tidak mengganggu proses ekstraksi fitur.
+- Preprocessing teks menggunakan **TF-IDF Vectorizer**:
+  - Menggunakan `stop_words='english'`
+  - Tokenisasi otomatis oleh `TfidfVectorizer` dari Scikit-learn
+- Semua nama produk distandarkan menjadi lowercase dan strip spasi untuk keperluan pencarian indeks nama.
+- TF-IDF menghasilkan vektor representasi teks yang digunakan untuk menghitung kemiripan antar deskripsi.
 
 ---
 
 ## Modeling
 
-- Mengisi nilai kosong pada kolom `Description` dengan string kosong agar tidak mengganggu proses vektorisasi.
-- Melakukan preprocessing teks dengan TF-IDF Vectorizer menggunakan stop words bahasa Inggris.
-- Membuat indeks nama produk yang telah distandarisasi (lowercase dan strip spasi) untuk pencarian yang lebih mudah dan akurat.
+Sistem rekomendasi dibangun menggunakan metode **Content-Based Filtering** dengan pendekatan sebagai berikut:
 
-**Output:** Sistem memberikan daftar produk yang paling relevan mirip dengan produk input.
+- Menggunakan **TF-IDF vector** dari kolom `Description` untuk representasi fitur.
+- Mengukur kemiripan antar produk menggunakan **cosine similarity** dari hasil vektorisasi TF-IDF.
+- Rekomendasi dihitung berdasarkan produk yang memiliki skor kemiripan tertinggi terhadap produk input (kecuali dirinya sendiri).
+
+### Contoh Output Rekomendasi (Top-5):
+
+Input produk: `'OPI Infinite Shine, Nail Lacquer Nail Polish'`  
+Output rekomendasi:
+
+| Name                                         | Similarity Score |
+|----------------------------------------------|------------------|
+| OPI Nail Lacquer, Bubble Bath, 0.5 fl oz     | 0.109            |
+| Sally Hansen Miracle Gel Nail Polish         | 0.065            |
+| Essie Nail Polish                            | 0.059            |
+| Revlon Nail Enamel                           | 0.057            |
+| Maybelline Fast Gel Nail Lacquer             | 0.048            |
+
 
 **Kelebihan:**
 
@@ -79,22 +105,33 @@ Dataset ini berjumlah sekitar 4090, dengan data deskripsi produk yang telah dibe
 
 ## Evaluation
 
-- Sistem diuji dengan memasukkan nama produk dan mencari produk paling mirip dalam dataset.
-- Jika produk tidak ditemukan, sistem menampilkan pesan produk tidak ada.
-- Jika produk ditemukan, sistem mengembalikan daftar produk serupa dengan skor kemiripan.
-- Contoh uji:
-  - Input `'Wireless Mouse'`: produk tidak ditemukan dalam dataset.
-  - Input `'OPI Infinite Shine, Nail Lacquer Nail Polish'`: produk ditemukan dan sistem memberikan rekomendasi 5 produk serupa, walaupun skor kemiripan rendah.
+Evaluasi dilakukan dengan dua pendekatan:
 
-**Catatan:** Karena rekomendasi berbasis similarity teks, nilai similarity score 0 menunjukkan tidak ada kemiripan yang berarti.
+1. **Uji Manual**: 
+   - Menginput nama produk dan menilai kualitas produk yang direkomendasikan.
+   - Jika produk tidak ditemukan, sistem menampilkan pesan.
+   - Jika ditemukan, menampilkan top-N produk serupa.
+
+2. **Metrik Evaluasi Formal**:  
+   Untuk mengukur performa sistem rekomendasi, digunakan **Precision@5**, yaitu rasio produk relevan dari 5 rekomendasi teratas.  
+
+   Contoh hasil evaluasi:
+
+   - Produk input: `'Essie Nail Polish'`
+   - Dari 5 rekomendasi, 3 produk merupakan produk sejenis dalam kategori Nail Polish.
+   - Precision@5 = 3 / 5 = **0.60**
+
+   Metrik ini relevan untuk mengevaluasi seberapa banyak rekomendasi yang benar-benar relevan bagi pengguna berdasarkan konteks produk yang mirip secara semantik.
 
 ---
 
 ## Kesimpulan dan Saran
 
-- Sistem rekomendasi content-based filtering berhasil memberikan rekomendasi produk yang relevan berdasarkan deskripsi.
-- Perlu penambahan data fitur lain dan metode hybrid (content + collaborative) untuk meningkatkan kualitas rekomendasi.
-- Pengembangan lebih lanjut dapat melibatkan evaluasi metrik sistem rekomendasi standar seperti Precision@K, Recall@K, dan Mean Average Precision (MAP).
+- Sistem rekomendasi content-based filtering berhasil mengidentifikasi produk yang mirip berdasarkan deskripsi.
+- Hasil rekomendasi cukup baik meskipun terbatas pada fitur teks saja.
+- Perlu ditambahkan fitur lain (kategori, brand, rating) agar sistem lebih akurat.
+- Dapat dikembangkan lebih lanjut menjadi **hybrid recommender system** (menggabungkan content-based dan collaborative).
+- Evaluasi sistem dapat lebih ditingkatkan dengan menambahkan metrik seperti Recall@K, F1@K, dan NDCG@K.
 
 ---
 

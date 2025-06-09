@@ -62,38 +62,40 @@ Dataset yang digunakan adalah `clean_data.csv`, yang berisi informasi produk dar
 - Tidak ditemukan duplikat berdasarkan kolom `Name`.
 - Deteksi dan penanganan outlier tidak dilakukan karena fitur numerik terbatas dan fokus model pada data deskriptif (teks).
 
-
 ---
 
 ## Data Preparation
-- *Missing value* pada kolom `Description` diisi dengan string kosong (`''`) untuk memastikan proses ekstraksi fitur tetap berjalan.
-- Preprocessing teks menggunakan **TF-IDF Vectorizer** dari Scikit-learn dengan parameter `stop_words='english'`.
-- Nama produk distandarkan ke lowercase dan strip spasi untuk pencocokan nama.
-- Vektor TF-IDF digunakan untuk representasi deskripsi produk.
+
+- Missing value pada kolom `Description` diisi dengan string kosong (`''`) agar proses ekstraksi fitur tetap berjalan.
+- Ekstraksi fitur dilakukan dengan **TF-IDF (Term Frequency-Inverse Document Frequency)** dari kolom `Description` menggunakan `TfidfVectorizer` dari scikit-learn. TF-IDF digunakan untuk mengubah teks menjadi representasi numerik berdasarkan pentingnya kata dalam konteks seluruh dokumen.
+- Parameter `stop_words='english'` digunakan untuk me  nghapus kata-kata umum yang tidak informatif.
+- Nama produk distandarkan ke lowercase dan di-strip untuk keperluan pencocokan nama.
+- Vektor TF-IDF digunakan untuk representasi deskripsi produk sebagai dasar perhitungan kemiripan.
 
 ---
 
 ## Modeling
 
 ### Metode
-- Sistem rekomendasi dibangun menggunakan pendekatan *content-based filtering*.
-- Representasi fitur: TF-IDF vektor dari kolom `Description`.
-- Metrik kemiripan: **cosine similarity** antar produk.
+- Sistem rekomendasi dibangun menggunakan pendekatan content-based filtering.
+- Representasi fitur diperoleh dari vektor TF-IDF kolom `Description`.
+- Kemiripan antar produk dihitung menggunakan **cosine similarity**.
 - Produk dengan nilai cosine similarity tertinggi (selain dirinya sendiri) direkomendasikan.
 
 ### Contoh Output Rekomendasi (Top-5)
 
-**Input Produk**: `OPI Infinite Shine, Nail Lacquer Nail Polish, Bubble Bath`
+**Input Produk**: `OPI Infinite Shine, Nail Lacquer Nail Polish`  
+**Produk yang Paling Mirip Ditemukan**: `OPI Infinite Shine, Nail Lacquer Nail Polish, Bubble Bath`
 
 **Hasil Rekomendasi:**
 
-| Name                                      | Similarity Score |
-|-------------------------------------------|------------------|
-| Nice n Easy Permanent Color Natural Black | 0.000            |
-| Revlon Colorsilk Beautiful Color          | 0.000            |
-| Garnier Olia Ammonia-Free Hair Color      | 0.000            |
-| Revlon Color Effects Platinum             | 0.000            |
-| Adore Semi Permanent Hair Color           | 0.000            |
+| No. | Nama Produk                                                                 | Similarity Score |
+|-----|-----------------------------------------------------------------------------|------------------|
+| 1   | Nice n Easy Permanent Color, 111 Natural Medium Auburn 1 ea (Pack of 3)     | 0.000            |
+| 2   | Clairol Nice N Easy Permanent Color 7/106A Natural Dark Neutral Blonde      | 0.000            |
+| 3   | Kokie Professional Matte Lipstick, Hot Berry                                | 0.000            |
+| 4   | Gillette TRAC II Plus Razor Blade Refills, Fit TRAC II Handles, 10 ct       | 0.000            |
+| 5   | Old Spice Artisan Styling High Hold Matte Finish Molding Clay, 2.64 oz      | 0.000            |
 
 
 > *Catatan:* Hasil ini menunjukkan bahwa deskripsi produk dalam kategori ini mungkin terlalu umum atau kurang informatif.
